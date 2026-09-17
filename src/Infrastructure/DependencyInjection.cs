@@ -2,6 +2,7 @@
 using AsanNobat.Infrastructure.Data;
 using AsanNobat.Infrastructure.Data.Interceptors;
 using AsanNobat.Infrastructure.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -33,11 +34,20 @@ public static class DependencyInjection
         builder.Services.AddScoped<ApplicationDbContextInitialiser>();
 
         builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = IdentityConstants.ApplicationScheme;
-                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            })
-            .AddIdentityCookies();
+        {
+            options.DefaultScheme = IdentityConstants.ApplicationScheme;
+            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+        })
+        .AddIdentityCookies();
+
+
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.Name = "AsanNobat.Identity";
+            options.Cookie.Domain = ".dev.localhost";
+            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        });
 
         builder.Services.AddAuthorizationBuilder();
 

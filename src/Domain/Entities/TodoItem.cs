@@ -1,6 +1,6 @@
 ﻿namespace AsanNobat.Domain.Entities;
 
-public class TodoItem : BaseAuditableEntity
+public class TodoItem : Aggregate
 {
     public int ListId { get; set; }
 

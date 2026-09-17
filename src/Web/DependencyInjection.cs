@@ -1,5 +1,4 @@
 using AsanNobat.Application.Common.Interfaces;
-using AsanNobat.Infrastructure.Data;
 using AsanNobat.Web.Services;
 using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
