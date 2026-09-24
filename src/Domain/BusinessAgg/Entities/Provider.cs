@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AsanNobat.Domain.Common.DDD;
 
 namespace AsanNobat.Domain.BusinessAgg.Entities;
 
@@ -12,8 +13,7 @@ public class Provider : BaseEntity
 
     public bool IsActive { get; private set; }
 
-    /// <summary>
-    /// شناسه خدماتی که این ارائه‌دهنده ارائه می‌کند.
-    /// </summary>
-    public List<int> ServiceIds { get; private set; } = [];
+    private readonly List<Service> _services = [];
+
+    public IReadOnlyCollection<Service> Services => _services.AsReadOnly();
 }

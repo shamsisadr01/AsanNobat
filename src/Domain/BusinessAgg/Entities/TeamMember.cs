@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AsanNobat.Domain.BusinessAgg.Enums;
+using AsanNobat.Domain.Common.DDD;
 
 namespace AsanNobat.Domain.BusinessAgg.Entities;
 

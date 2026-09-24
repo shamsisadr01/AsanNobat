@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AsanNobat.Domain.BusinessAgg.Enums;
+using AsanNobat.Domain.Common.DDD;
 
 namespace AsanNobat.Domain.BusinessAgg.Entities;
 
@@ -9,11 +10,6 @@ public class Counter : BaseEntity
 {
     public string Name { get; private set; } = null!;
     public bool IsActive { get; private set; }
-
-    /// <summary>
-    /// وضعیت فعلی باجه؛ آزاد یا مشغول به ارائه خدمت.
-    /// </summary>
-    public CounterStatus Status { get; private set; }
 
     /// <summary>
     /// شناسه ورودی صفی که در حال حاضر در این باجه در حال سرویس است.
@@ -31,5 +27,8 @@ public class Counter : BaseEntity
     /// شناسه خدماتی که این باجه می‌تواند ارائه دهد.
     /// لیست خالی به معنی پوشش تمام خدمات است.
     /// </summary>
-    public List<int> AssignedServiceIds { get; private set; } = [];
+    private readonly List<Service> _assignedServices = [];
+
+    public IReadOnlyCollection<Service> AssignedServices =>
+        _assignedServices.AsReadOnly();
 }
