@@ -1,4 +1,6 @@
-﻿namespace AsanNobat.Domain.Entities;
+﻿using AsanNobat.Domain.Common.DDD;
+
+namespace AsanNobat.Domain.Entities;
 
 public class TodoItem : Aggregate
 {

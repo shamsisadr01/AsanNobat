@@ -1,3 +1,5 @@
+using AsanNobat.Domain.Common.DDD;
+
 namespace AsanNobat.Domain.ValueObjects;
 
 public class Colour(string code) : ValueObject

@@ -29,7 +29,19 @@ public static class DependencyInjection
             options.AddOperationTransformer<IdentityApiOperationTransformer>();
         });
 
-        builder.Services.AddCors();
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("Frontend", policy =>
+            {
+                policy
+                    .WithOrigins(
+                        "https://webfrontend-asannobat.dev.localhost"
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+        });
     }
 
     public static void AddKeyVaultIfConfigured(this IHostApplicationBuilder builder)

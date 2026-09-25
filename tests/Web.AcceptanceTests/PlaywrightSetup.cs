@@ -20,7 +20,8 @@ public class PlaywrightSetup
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = IsHeadless,
-            SlowMo = IsHeadless ? 0 : 500
+            SlowMo = IsHeadless ? 0 : 500,
+            Channel = "chrome"
         });
     }
 

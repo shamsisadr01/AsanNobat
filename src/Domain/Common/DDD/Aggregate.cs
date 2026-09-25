@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AsanNobat.Domain.Common;
+namespace AsanNobat.Domain.Common.DDD;
 
 public abstract class Aggregate : BaseEntity
 {

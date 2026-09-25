@@ -1,4 +1,4 @@
-﻿namespace AsanNobat.Domain.Common;
+﻿namespace AsanNobat.Domain.Common.DDD;
 
 // Auditable Entity
 public abstract class BaseEntity

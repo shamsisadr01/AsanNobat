@@ -1,4 +1,4 @@
-﻿using AsanNobat.Domain.Common;
+﻿using AsanNobat.Domain.Common.DDD;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
