@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AsanNobat.Domain.BusinessAgg.Enums;
-using AsanNobat.Domain.Common.DDD;
+﻿using AsanNobat.Domain.Common.DDD;
 
 namespace AsanNobat.Domain.BusinessAgg.Entities;
 
@@ -31,4 +27,36 @@ public class Counter : BaseEntity
 
     public IReadOnlyCollection<Service> AssignedServices =>
         _assignedServices.AsReadOnly();
+
+    private Counter()
+    {
+        
+    }
+
+    internal Counter(string name, bool isActive, int? currentServingQueueEntryId = null)
+    {
+        ArgumentNullException.ThrowIfNullOrEmpty(name, nameof(name));
+        Name = name;
+        IsActive = isActive;
+        CurrentServingQueueEntryId = currentServingQueueEntryId;
+    }
+
+    public void Update(string name, bool isActive, int? currentServingQueueEntryId = null)
+    {
+        ArgumentNullException.ThrowIfNullOrEmpty(name, nameof(name));
+        Name = name;
+        IsActive = isActive;
+        CurrentServingQueueEntryId = currentServingQueueEntryId;
+    }
+
+
+    public void AddService(Service service)
+    {
+        _assignedServices.Add(service);
+    }
+
+    public void RemoveService(Service service)
+    {
+        _assignedServices.Remove(service);
+    }
 }

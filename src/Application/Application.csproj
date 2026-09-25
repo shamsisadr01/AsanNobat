@@ -20,4 +20,23 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BusinessAgg\Commands\RemoveBusiness\" />
+    <Folder Include="BusinessAgg\Commands\CreateService\" />
+    <Folder Include="BusinessAgg\Commands\CreateProvider\" />
+    <Folder Include="BusinessAgg\Commands\CreateServiceToProvider\" />
+    <Folder Include="BusinessAgg\Commands\CreateCounter\" />
+    <Folder Include="BusinessAgg\Commands\CreateServiceToCounter\" />
+    <Folder Include="BusinessAgg\Commands\RemoveServiceToCounter\" />
+    <Folder Include="BusinessAgg\Commands\RemoveCounter\" />
+    <Folder Include="BusinessAgg\Commands\UpdateCounter\" />
+    <Folder Include="BusinessAgg\Commands\RemoveServiceToProvider\" />
+    <Folder Include="BusinessAgg\Commands\RemoveProvider\" />
+    <Folder Include="BusinessAgg\Commands\UpdateProvider\" />
+    <Folder Include="BusinessAgg\Commands\RemoveService\" />
+    <Folder Include="BusinessAgg\Commands\UpdateService\" />
+    <Folder Include="BusinessAgg\EventHandlers\" />
+    <Folder Include="BusinessAgg\Queries\" />
+  </ItemGroup>
+
 </Project>

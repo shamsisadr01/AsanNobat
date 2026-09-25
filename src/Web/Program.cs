@@ -1,3 +1,4 @@
+using AsanNobat.Application;
 using AsanNobat.Infrastructure.Data;
 using Scalar.AspNetCore;
 

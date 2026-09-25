@@ -16,6 +16,10 @@ public class Service : BaseEntity
     public string? LogoUrl { get; private set; }
     public ServiceMode Mode { get; private set; }
 
+    private Service()
+    {
+        
+    }
 
     internal Service(string name, string? description, bool isActive, string? logoUrl, ServiceMode mode = ServiceMode.Both, int averageServiceTimeMinutes = 2)
     {
@@ -42,7 +46,7 @@ public class Service : BaseEntity
 
     public void Guard(string name, int averageServiceTimeMinutes)
     {
-        ArgumentNullException.ThrowIfNullOrEmpty(name);
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(averageServiceTimeMinutes);
+        ArgumentNullException.ThrowIfNullOrEmpty(name, nameof(name));
+        ArgumentOutOfRangeException.ThrowIfLessThan(averageServiceTimeMinutes, 1, nameof(averageServiceTimeMinutes));
     }
 }
