@@ -9,7 +9,7 @@ public class CreateTeamMemberCommandHandler : IRequestHandler<CreateTeamMemberCo
         _context = context;
     }
 
-    public async Task<int> Handle(CreateTeamMemberCommand request, CancellationToken cancellationToken)
+    public async ValueTask<int> Handle(CreateTeamMemberCommand request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
             .FindAsync([request.BusinessId], cancellationToken);

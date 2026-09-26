@@ -12,11 +12,10 @@ public class LogBusinessDeleted : INotificationHandler<BusinessDeletedEvent>
         _logger = logger;
     }
 
-    public Task Handle(BusinessDeletedEvent notification, CancellationToken cancellationToken)
+    public ValueTask Handle(BusinessDeletedEvent notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("AsanNobat Domain Event: {DomainEvent} - BusinessId: {BusinessId}",
             notification.GetType().Name, notification.Business.Id);
-
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 }

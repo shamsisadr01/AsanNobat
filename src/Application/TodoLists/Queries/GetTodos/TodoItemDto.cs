@@ -16,12 +16,12 @@ public class TodoItemDto
 
     public string? Note { get; init; }
 
-    private class Mapping : Profile
+    private class Mapping : IRegister
     {
-        public Mapping()
+        public void Register(TypeAdapterConfig config)
         {
-            CreateMap<TodoItem, TodoItemDto>().ForMember(d => d.Priority,
-                opt => opt.MapFrom(s => (int)s.Priority));
+            config.NewConfig<TodoItem, TodoItemDto>()
+                .Map(d => d.Priority, s => (int)s.Priority);
         }
     }
 }

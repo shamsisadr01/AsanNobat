@@ -1,6 +1,6 @@
 ﻿namespace AsanNobat.Application.BusinessAgg.Commands.CreateCounter;
 
-public class CreateCounterCommandHandler : IRequestHandler<CreateCounterCommand, int>
+internal class CreateCounterCommandHandler : IRequestHandler<CreateCounterCommand, int>
 {
     private readonly IApplicationDbContext _context;
 
@@ -9,10 +9,10 @@ public class CreateCounterCommandHandler : IRequestHandler<CreateCounterCommand,
         _context = context;
     }
 
-    public async Task<int> Handle(CreateCounterCommand request, CancellationToken cancellationToken)
+    public async ValueTask<int> Handle(CreateCounterCommand request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
-            .FindAsync([request.BusinessId], cancellationToken);
+             .FindAsync([request.BusinessId], cancellationToken);
 
         Guard.Against.NotFound(request.BusinessId, business);
 

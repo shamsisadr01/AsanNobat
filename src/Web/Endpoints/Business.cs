@@ -1,5 +1,4 @@
 using AsanNobat.Application.BusinessAgg.Commands.CreateBusiness;
-using AsanNobat.Application.BusinessAgg.Queries.GetBusiness;
 using AsanNobat.Application.BusinessAgg.Queries.GetBusinesses;
 using AsanNobat.Application.BusinessAgg.Queries.GetBusinessCounters;
 using AsanNobat.Application.BusinessAgg.Queries.GetBusinessProviders;
@@ -35,7 +34,6 @@ public class Business : IEndpointGroup
 
         // Business
         groupBuilder.MapGet(GetBusinesses);
-        groupBuilder.MapGet(GetBusiness, "{id}");
         groupBuilder.MapPost(CreateBusiness);
         groupBuilder.MapPut(UpdateBusiness, "{id}");
         groupBuilder.MapDelete(DeleteBusiness, "{id}");
@@ -82,13 +80,6 @@ public class Business : IEndpointGroup
     public static async Task<Ok<BusinessesVm>> GetBusinesses(ISender sender)
     {
         return TypedResults.Ok(await sender.Send(new GetBusinessesQuery()));
-    }
-
-    [EndpointSummary("Get a Business with details")]
-    [EndpointDescription("Returns the specified business including its services, providers, counters and team members.")]
-    public static async Task<Results<Ok<BusinessDetailsDto>, NotFound>> GetBusiness(ISender sender, int id)
-    {
-        return TypedResults.Ok(await sender.Send(new GetBusinessQuery(id)));
     }
 
     [EndpointSummary("Get business Services")]

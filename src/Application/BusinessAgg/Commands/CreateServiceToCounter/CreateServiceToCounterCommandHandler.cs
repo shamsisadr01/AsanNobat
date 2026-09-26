@@ -9,7 +9,7 @@ public class CreateServiceToCounterCommandHandler : IRequestHandler<CreateServic
         _context = context;
     }
 
-    public async Task Handle(CreateServiceToCounterCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Unit> Handle(CreateServiceToCounterCommand request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
             .FindAsync([request.BusinessId], cancellationToken);
@@ -19,5 +19,6 @@ public class CreateServiceToCounterCommandHandler : IRequestHandler<CreateServic
         business.CreateServiceToCounter(request.ServiceId, request.CounterId);
 
         await _context.SaveChangesAsync(cancellationToken);
+        return Unit.Value;
     }
 }

@@ -9,7 +9,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand>
         _context = context;
     }
 
-    public async Task Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Unit> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
             .FindAsync([request.BusinessId], cancellationToken);
@@ -26,5 +26,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand>
             request.AverageServiceTimeMinutes);
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
     }
 }

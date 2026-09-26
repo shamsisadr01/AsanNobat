@@ -9,15 +9,16 @@ public class RemoveServiceToProviderCommandHandler : IRequestHandler<RemoveServi
         _context = context;
     }
 
-    public async Task Handle(RemoveServiceToProviderCommand request, CancellationToken cancellationToken)
+    async ValueTask<Unit> IRequestHandler<RemoveServiceToProviderCommand, Unit>.Handle(RemoveServiceToProviderCommand request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
-            .FindAsync([request.BusinessId], cancellationToken);
+           .FindAsync([request.BusinessId], cancellationToken);
 
         Guard.Against.NotFound(request.BusinessId, business);
 
         business.RemoveServiceToProvider(request.ServiceId, request.ProviderId);
 
         await _context.SaveChangesAsync(cancellationToken);
+        return Unit.Value;
     }
 }

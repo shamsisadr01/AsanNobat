@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AsanNobat.Application.Common.Interfaces;
-using AsanNobat.Application.Common.Security;
+﻿using AsanNobat.Application.Common.Security;
 
 namespace AsanNobat.Application.BusinessAgg.Queries.GetBusinesses;
 
@@ -18,13 +16,13 @@ public class GetBusinessesQueryHandler : IRequestHandler<GetBusinessesQuery, Bus
         _mapper = mapper;
     }
 
-    public async Task<BusinessesVm> Handle(GetBusinessesQuery request, CancellationToken cancellationToken)
+    public async ValueTask<BusinessesVm> Handle(GetBusinessesQuery request, CancellationToken cancellationToken)
     {
         return new BusinessesVm
         {
             Businesses = await _context.Businesses
                 .AsNoTracking()
-                .ProjectTo<BusinessDto>(_mapper.ConfigurationProvider)
+                .ProjectToType<BusinessDto>()
                 .OrderBy(b => b.Name)
                 .ToListAsync(cancellationToken)
         };
@@ -50,11 +48,11 @@ public class BusinessDto
 
     public string Address { get; init; } = string.Empty;
 
-    private class Mapping : Profile
+    private class Mapping : IRegister
     {
-        public Mapping()
+        public void Register(TypeAdapterConfig config)
         {
-            CreateMap<AsanNobat.Domain.BusinessAgg.Business, BusinessDto>();
+            config.NewConfig<AsanNobat.Domain.BusinessAgg.Business, BusinessDto>();
         }
     }
 }

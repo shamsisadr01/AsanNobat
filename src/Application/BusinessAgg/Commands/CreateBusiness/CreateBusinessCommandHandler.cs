@@ -1,6 +1,6 @@
 ﻿namespace AsanNobat.Application.BusinessAgg.Commands.CreateBusiness;
 
-public class CreateBusinessCommandHandler : IRequestHandler<CreateBusinessCommand, int>
+internal class CreateBusinessCommandHandler : IRequestHandler<CreateBusinessCommand, int>
 {
     private readonly IApplicationDbContext _context;
 
@@ -9,7 +9,7 @@ public class CreateBusinessCommandHandler : IRequestHandler<CreateBusinessComman
         _context = context;
     }
 
-    public async Task<int> Handle(CreateBusinessCommand request, CancellationToken cancellationToken)
+    public async ValueTask<int> Handle(CreateBusinessCommand request, CancellationToken cancellationToken)
     {
         var entity = Business.Create(request.Name, "slug" + Guid.NewGuid(), request.Description, request.PhoneNumber, request.Address);
 

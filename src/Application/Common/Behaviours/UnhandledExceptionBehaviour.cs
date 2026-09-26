@@ -3,7 +3,7 @@
 namespace AsanNobat.Application.Common.Behaviours;
 
 public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+    where TRequest : notnull,IMessage
 {
     private readonly ILogger<TRequest> _logger;
 
@@ -12,17 +12,18 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavio
         _logger = logger;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+
+    public async ValueTask<TResponse> Handle(TRequest message, MessageHandlerDelegate<TRequest, TResponse> next, CancellationToken cancellationToken)
     {
         try
         {
-            return await next();
+            return await next(message, cancellationToken);
         }
         catch (Exception ex)
         {
             var requestName = typeof(TRequest).Name;
 
-            _logger.LogError(ex, "AsanNobat Request: Unhandled Exception for Request {Name} {@Request}", requestName, request);
+            _logger.LogError(ex, "AsanNobat Request: Unhandled Exception for Request {Name} {@Request}", requestName, message);
 
             throw;
         }

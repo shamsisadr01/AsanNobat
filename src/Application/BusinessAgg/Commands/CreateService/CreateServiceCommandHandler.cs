@@ -9,7 +9,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         _context = context;
     }
 
-    public async Task<int> Handle(CreateServiceCommand request, CancellationToken cancellationToken)
+    public async ValueTask<int> Handle(CreateServiceCommand request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
             .FindAsync([request.BusinessId], cancellationToken);

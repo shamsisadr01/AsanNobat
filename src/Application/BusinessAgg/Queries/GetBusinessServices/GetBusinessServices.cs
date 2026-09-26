@@ -1,6 +1,6 @@
 ﻿using AsanNobat.Application.Common.Interfaces;
 using AsanNobat.Application.Common.Security;
-using AsanNobat.Application.BusinessAgg.Queries.GetBusiness;
+using AsanNobat.Application.BusinessAgg.Queries.Common;
 
 namespace AsanNobat.Application.BusinessAgg.Queries.GetBusinessServices;
 
@@ -18,12 +18,12 @@ public class GetBusinessServicesQueryHandler : IRequestHandler<GetBusinessServic
         _mapper = mapper;
     }
 
-    public async Task<ServicesVm> Handle(GetBusinessServicesQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ServicesVm> Handle(GetBusinessServicesQuery request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
             .AsNoTracking()
             .Where(b => b.Id == request.BusinessId)
-            .ProjectTo<ServicesVm>(_mapper.ConfigurationProvider)
+            .ProjectToType<ServicesVm>()
             .FirstOrDefaultAsync(cancellationToken);
 
         Guard.Against.NotFound(request.BusinessId, business);
@@ -36,12 +36,12 @@ public class ServicesVm
 {
     public IReadOnlyCollection<ServiceDto> Services { get; init; } = [];
 
-    private class Mapping : Profile
+    private class Mapping : IRegister
     {
-        public Mapping()
+        public void Register(TypeAdapterConfig config)
         {
-            CreateMap<AsanNobat.Domain.BusinessAgg.Business, ServicesVm>()
-                .ForMember(d => d.Services, opt => opt.MapFrom(s => s.Services));
+            config.NewConfig<AsanNobat.Domain.BusinessAgg.Business, ServicesVm>()
+                .Map(d => d.Services, s => s.Services);
         }
     }
 }

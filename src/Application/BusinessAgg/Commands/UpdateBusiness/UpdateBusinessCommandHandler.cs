@@ -7,7 +7,7 @@ public class UpdateBusinessCommandHandler : IRequestHandler<UpdateBusinessComman
     {
         _context = context;
     }
-    public async Task Handle(UpdateBusinessCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Unit> Handle(UpdateBusinessCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Businesses
             .FindAsync([request.Id], cancellationToken);
@@ -16,5 +16,7 @@ public class UpdateBusinessCommandHandler : IRequestHandler<UpdateBusinessComman
 
         entity.Update(request.Name, "slug" + Guid.NewGuid(), request.Description, request.PhoneNumber, request.Address);
         await _context.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
     }
 }

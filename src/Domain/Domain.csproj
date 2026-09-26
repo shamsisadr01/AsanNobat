@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR.Contracts" />
+    <Folder Include="BusinessAgg\Exceptions\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessAgg\Exceptions\" />
+    <PackageReference Include="Mediator.Abstractions" />
   </ItemGroup>
 
 </Project>

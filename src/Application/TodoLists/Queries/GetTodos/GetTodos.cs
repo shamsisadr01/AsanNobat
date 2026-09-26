@@ -20,7 +20,7 @@ public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
         _mapper = mapper;
     }
 
-    public async Task<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
+    public async ValueTask<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
     {
         return new TodosVm
         {
@@ -42,7 +42,7 @@ public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
 
             Lists = await _context.TodoLists
                 .AsNoTracking()
-                .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
+                .ProjectToType<TodoListDto>()
                 .OrderBy(t => t.Title)
                 .ToListAsync(cancellationToken)
         };

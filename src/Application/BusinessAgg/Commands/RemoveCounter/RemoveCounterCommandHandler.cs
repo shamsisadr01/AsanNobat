@@ -9,7 +9,7 @@ public class RemoveCounterCommandHandler : IRequestHandler<RemoveCounterCommand>
         _context = context;
     }
 
-    public async Task Handle(RemoveCounterCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Unit> Handle(RemoveCounterCommand request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
             .FindAsync([request.BusinessId], cancellationToken);
@@ -19,5 +19,7 @@ public class RemoveCounterCommandHandler : IRequestHandler<RemoveCounterCommand>
         business.RemoveCounter(request.CounterId);
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
     }
 }

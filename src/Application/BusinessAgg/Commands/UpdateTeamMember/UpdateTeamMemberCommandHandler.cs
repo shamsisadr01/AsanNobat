@@ -9,7 +9,7 @@ public class UpdateTeamMemberCommandHandler : IRequestHandler<UpdateTeamMemberCo
         _context = context;
     }
 
-    public async Task Handle(UpdateTeamMemberCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Unit> Handle(UpdateTeamMemberCommand request, CancellationToken cancellationToken)
     {
         var business = await _context.Businesses
             .FindAsync([request.BusinessId], cancellationToken);
@@ -19,5 +19,7 @@ public class UpdateTeamMemberCommandHandler : IRequestHandler<UpdateTeamMemberCo
         business.UpdateTeamMember(request.TeamMemberId, request.Name, request.Email, request.Role);
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
     }
 }
