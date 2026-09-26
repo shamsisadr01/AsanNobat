@@ -1,26 +1,35 @@
 ﻿using System.Reflection;
 using AsanNobat.Application.Common.Behaviours;
+using AsanNobat.Application.TodoLists.Commands.CreateTodoList;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace AsanNobat.Application;
 
 public static class DependencyInjection
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddAutoMapper(cfg =>
-            cfg.AddMaps(Assembly.GetExecutingAssembly()));
+        TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
+        builder.Services.AddSingleton(TypeAdapterConfig.GlobalSettings);
+        builder.Services.AddScoped<IMapper, ServiceMapper>();
 
         builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        builder.Services.AddMediatR(cfg =>
+        builder.Services.AddMediator(options =>
         {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            cfg.AddOpenRequestPreProcessor(typeof(LoggingBehaviour<>));
-            cfg.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
-            cfg.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
-            cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
-            cfg.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
+            options.Assemblies = [typeof(DependencyInjection)];
+
+            options.PipelineBehaviors =
+            [
+                typeof(LoggingBehaviour<,>),
+                typeof(UnhandledExceptionBehaviour<,>),
+                typeof(AuthorizationBehaviour<,>),
+                typeof(ValidationBehaviour<,>),
+                typeof(PerformanceBehaviour<,>)
+            ];
+
+            options.ServiceLifetime = ServiceLifetime.Scoped;
         });
     }
 }

@@ -1,5 +1,5 @@
 ﻿using AsanNobat.Application.Common.Interfaces;
-using AsanNobat.Domain.Common;
+using AsanNobat.Domain.Common.DDD;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;

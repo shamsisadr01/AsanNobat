@@ -1,19 +1,18 @@
 ﻿using System.Diagnostics;
-using AsanNobat.Application.Common.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace AsanNobat.Application.Common.Behaviours;
 
-public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+public class PerformanceBehaviour<TMessage, TResponse> : IPipelineBehavior<TMessage, TResponse>
+    where TMessage : notnull,IMessage
 {
     private readonly Stopwatch _timer;
-    private readonly ILogger<TRequest> _logger;
+    private readonly ILogger<TMessage> _logger;
     private readonly IUser _user;
     private readonly IIdentityService _identityService;
 
     public PerformanceBehaviour(
-        ILogger<TRequest> logger,
+        ILogger<TMessage> logger,
         IUser user,
         IIdentityService identityService)
     {
@@ -24,11 +23,11 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         _identityService = identityService;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async ValueTask<TResponse> Handle(TMessage message, MessageHandlerDelegate<TMessage, TResponse> next, CancellationToken cancellationToken)
     {
         _timer.Start();
 
-        var response = await next();
+        var response = await next(message, cancellationToken);
 
         _timer.Stop();
 
@@ -36,7 +35,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 
         if (elapsedMilliseconds > 500)
         {
-            var requestName = typeof(TRequest).Name;
+            var requestName = typeof(TMessage).Name;
             var userId = _user.Id ?? string.Empty;
             var userName = string.Empty;
 
@@ -46,7 +45,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
             }
 
             _logger.LogWarning("AsanNobat Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
-                requestName, elapsedMilliseconds, userId, userName, request);
+                requestName, elapsedMilliseconds, userId, userName, message);
         }
 
         return response;

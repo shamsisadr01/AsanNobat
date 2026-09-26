@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using AsanNobat.Application.Common.Interfaces;
+using AsanNobat.Domain.BusinessAgg;
 using AsanNobat.Domain.Entities;
 using AsanNobat.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,6 +15,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public DbSet<TodoList> TodoLists => Set<TodoList>();
 
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+
+    public DbSet<Business> Businesses => Set<Business>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

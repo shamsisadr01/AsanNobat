@@ -1,7 +1,7 @@
 using AsanNobat.Domain.Constants;
 using AsanNobat.Infrastructure.Data;
 using AsanNobat.Infrastructure.Identity;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

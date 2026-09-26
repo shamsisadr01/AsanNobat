@@ -1,26 +1,24 @@
-﻿using AsanNobat.Application.Common.Interfaces;
-using MediatR.Pipeline;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace AsanNobat.Application.Common.Behaviours;
 
-public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest>
-    where TRequest : notnull
+public sealed class LoggingBehaviour<TMessage, TResponse> : MessagePreProcessor<TMessage, TResponse>
+    where TMessage : notnull, IMessage
 {
     private readonly ILogger _logger;
     private readonly IUser _user;
     private readonly IIdentityService _identityService;
 
-    public LoggingBehaviour(ILogger<TRequest> logger, IUser user, IIdentityService identityService)
+    public LoggingBehaviour(ILogger<TMessage> logger, IUser user, IIdentityService identityService)
     {
         _logger = logger;
         _user = user;
         _identityService = identityService;
     }
 
-    public async Task Process(TRequest request, CancellationToken cancellationToken)
+    protected override async ValueTask Handle(TMessage message, CancellationToken cancellationToken)
     {
-        var requestName = typeof(TRequest).Name;
+        var requestName = typeof(TMessage).Name;
         var userId = _user.Id ?? string.Empty;
         string? userName = string.Empty;
 
@@ -30,6 +28,6 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest>
         }
 
         _logger.LogInformation("AsanNobat Request: {Name} {@UserId} {@UserName} {@Request}",
-            requestName, userId, userName, request);
+            requestName, userId, userName, message);
     }
 }

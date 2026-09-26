@@ -1,4 +1,6 @@
-﻿namespace AsanNobat.Domain.Events;
+﻿using AsanNobat.Domain.Common.DDD;
+
+namespace AsanNobat.Domain.Events;
 
 public class TodoItemCompletedEvent : BaseEvent
 {

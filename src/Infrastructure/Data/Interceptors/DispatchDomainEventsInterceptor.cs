@@ -1,5 +1,5 @@
-﻿using AsanNobat.Domain.Common;
-using MediatR;
+﻿using AsanNobat.Domain.Common.DDD;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

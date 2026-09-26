@@ -12,10 +12,10 @@ public class LogTodoItemCompleted : INotificationHandler<TodoItemCompletedEvent>
         _logger = logger;
     }
 
-    public Task Handle(TodoItemCompletedEvent notification, CancellationToken cancellationToken)
+    public ValueTask Handle(TodoItemCompletedEvent notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("AsanNobat Domain Event: {DomainEvent}", notification.GetType().Name);
 
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 }

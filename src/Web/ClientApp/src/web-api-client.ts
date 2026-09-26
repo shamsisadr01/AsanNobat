@@ -7,6 +7,1302 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+export class BusinessClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * Get all Businesses
+     * @return OK
+     */
+    getBusinesses(): Promise<BusinessesVm> {
+        let url_ = this.baseUrl + "/api/Business";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetBusinesses(_response);
+        });
+    }
+
+    protected processGetBusinesses(response: Response): Promise<BusinessesVm> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = BusinessesVm.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<BusinessesVm>(null as any);
+    }
+
+    /**
+     * Create a new Business
+     * @return Created
+     */
+    createBusiness(body: CreateBusinessCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Business";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateBusiness(_response);
+        });
+    }
+
+    protected processCreateBusiness(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 201) {
+            return response.text().then((_responseText) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : null as any;
+    
+            return result201;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * Update a Business
+     * @return No Content
+     */
+    updateBusiness(id: number, body: UpdateBusinessCommand): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateBusiness(_response);
+        });
+    }
+
+    protected processUpdateBusiness(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Delete a Business
+     * @return No Content
+     */
+    deleteBusiness(id: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteBusiness(_response);
+        });
+    }
+
+    protected processDeleteBusiness(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Create a new Service
+     * @return Created
+     */
+    createService(body: CreateServiceCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Business/Services";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateService(_response);
+        });
+    }
+
+    protected processCreateService(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 201) {
+            return response.text().then((_responseText) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : null as any;
+    
+            return result201;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * Update a Service
+     * @return No Content
+     */
+    updateService(serviceId: number, body: UpdateServiceCommand): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/Services/{serviceId}";
+        if (serviceId === undefined || serviceId === null)
+            throw new globalThis.Error("The parameter 'serviceId' must be defined.");
+        url_ = url_.replace("{serviceId}", encodeURIComponent("" + serviceId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateService(_response);
+        });
+    }
+
+    protected processUpdateService(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Delete a Service
+     * @return No Content
+     */
+    deleteService(businessId: number, serviceId: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/{businessId}/Services/{serviceId}";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        if (serviceId === undefined || serviceId === null)
+            throw new globalThis.Error("The parameter 'serviceId' must be defined.");
+        url_ = url_.replace("{serviceId}", encodeURIComponent("" + serviceId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteService(_response);
+        });
+    }
+
+    protected processDeleteService(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Create a new Provider
+     * @return Created
+     */
+    createProvider(body: CreateProviderCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Business/Providers";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateProvider(_response);
+        });
+    }
+
+    protected processCreateProvider(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 201) {
+            return response.text().then((_responseText) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : null as any;
+    
+            return result201;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * Update a Provider
+     * @return No Content
+     */
+    updateProvider(providerId: number, body: UpdateProviderCommand): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/Providers/{providerId}";
+        if (providerId === undefined || providerId === null)
+            throw new globalThis.Error("The parameter 'providerId' must be defined.");
+        url_ = url_.replace("{providerId}", encodeURIComponent("" + providerId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateProvider(_response);
+        });
+    }
+
+    protected processUpdateProvider(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Delete a Provider
+     * @return No Content
+     */
+    deleteProvider(businessId: number, providerId: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/{businessId}/Providers/{providerId}";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        if (providerId === undefined || providerId === null)
+            throw new globalThis.Error("The parameter 'providerId' must be defined.");
+        url_ = url_.replace("{providerId}", encodeURIComponent("" + providerId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteProvider(_response);
+        });
+    }
+
+    protected processDeleteProvider(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Create a new Counter
+     * @return Created
+     */
+    createCounter(body: CreateCounterCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Business/Counters";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateCounter(_response);
+        });
+    }
+
+    protected processCreateCounter(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 201) {
+            return response.text().then((_responseText) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : null as any;
+    
+            return result201;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * Update a Counter
+     * @return No Content
+     */
+    updateCounter(counterId: number, body: UpdateCounterCommand): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/Counters/{counterId}";
+        if (counterId === undefined || counterId === null)
+            throw new globalThis.Error("The parameter 'counterId' must be defined.");
+        url_ = url_.replace("{counterId}", encodeURIComponent("" + counterId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateCounter(_response);
+        });
+    }
+
+    protected processUpdateCounter(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Delete a Counter
+     * @return No Content
+     */
+    deleteCounter(businessId: number, counterId: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/{businessId}/Counters/{counterId}";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        if (counterId === undefined || counterId === null)
+            throw new globalThis.Error("The parameter 'counterId' must be defined.");
+        url_ = url_.replace("{counterId}", encodeURIComponent("" + counterId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteCounter(_response);
+        });
+    }
+
+    protected processDeleteCounter(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Assign a service to a provider
+     * @return No Content
+     */
+    assignServiceToProvider(body: CreateServiceToProviderCommand): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/ServiceToProvider";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAssignServiceToProvider(_response);
+        });
+    }
+
+    protected processAssignServiceToProvider(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Unassign a service from a provider
+     * @return No Content
+     */
+    unassignServiceFromProvider(businessId: number, serviceId: number, providerId: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/ServiceToProvider/{businessId}/{serviceId}/{providerId}";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        if (serviceId === undefined || serviceId === null)
+            throw new globalThis.Error("The parameter 'serviceId' must be defined.");
+        url_ = url_.replace("{serviceId}", encodeURIComponent("" + serviceId));
+        if (providerId === undefined || providerId === null)
+            throw new globalThis.Error("The parameter 'providerId' must be defined.");
+        url_ = url_.replace("{providerId}", encodeURIComponent("" + providerId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUnassignServiceFromProvider(_response);
+        });
+    }
+
+    protected processUnassignServiceFromProvider(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Assign a service to a counter
+     * @return No Content
+     */
+    assignServiceToCounter(body: CreateServiceToCounterCommand): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/ServiceToCounter";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAssignServiceToCounter(_response);
+        });
+    }
+
+    protected processAssignServiceToCounter(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Unassign a service from a counter
+     * @return No Content
+     */
+    unassignServiceFromCounter(businessId: number, serviceId: number, counterId: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/ServiceToCounter/{businessId}/{serviceId}/{counterId}";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        if (serviceId === undefined || serviceId === null)
+            throw new globalThis.Error("The parameter 'serviceId' must be defined.");
+        url_ = url_.replace("{serviceId}", encodeURIComponent("" + serviceId));
+        if (counterId === undefined || counterId === null)
+            throw new globalThis.Error("The parameter 'counterId' must be defined.");
+        url_ = url_.replace("{counterId}", encodeURIComponent("" + counterId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUnassignServiceFromCounter(_response);
+        });
+    }
+
+    protected processUnassignServiceFromCounter(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Get business Services
+     * @return OK
+     */
+    getBusinessServices(businessId: number): Promise<ServicesVm> {
+        let url_ = this.baseUrl + "/api/Business/{businessId}/Services";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetBusinessServices(_response);
+        });
+    }
+
+    protected processGetBusinessServices(response: Response): Promise<ServicesVm> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ServicesVm.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("Not Found", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ServicesVm>(null as any);
+    }
+
+    /**
+     * Get business Providers
+     * @return OK
+     */
+    getBusinessProviders(businessId: number): Promise<ProvidersVm> {
+        let url_ = this.baseUrl + "/api/Business/{businessId}/Providers";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetBusinessProviders(_response);
+        });
+    }
+
+    protected processGetBusinessProviders(response: Response): Promise<ProvidersVm> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProvidersVm.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("Not Found", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ProvidersVm>(null as any);
+    }
+
+    /**
+     * Get business Counters
+     * @return OK
+     */
+    getBusinessCounters(businessId: number): Promise<CountersVm> {
+        let url_ = this.baseUrl + "/api/Business/{businessId}/Counters";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetBusinessCounters(_response);
+        });
+    }
+
+    protected processGetBusinessCounters(response: Response): Promise<CountersVm> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CountersVm.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("Not Found", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CountersVm>(null as any);
+    }
+
+    /**
+     * Get business Team Members
+     * @return OK
+     */
+    getBusinessTeamMembers(businessId: number): Promise<TeamMembersVm> {
+        let url_ = this.baseUrl + "/api/Business/{businessId}/TeamMembers";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetBusinessTeamMembers(_response);
+        });
+    }
+
+    protected processGetBusinessTeamMembers(response: Response): Promise<TeamMembersVm> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = TeamMembersVm.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("Not Found", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<TeamMembersVm>(null as any);
+    }
+
+    /**
+     * Create a new Team Member
+     * @return Created
+     */
+    createTeamMember(body: CreateTeamMemberCommand): Promise<number> {
+        let url_ = this.baseUrl + "/api/Business/TeamMembers";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateTeamMember(_response);
+        });
+    }
+
+    protected processCreateTeamMember(response: Response): Promise<number> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 201) {
+            return response.text().then((_responseText) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result201 = resultData201 !== undefined ? resultData201 : null as any;
+    
+            return result201;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<number>(null as any);
+    }
+
+    /**
+     * Update a Team Member
+     * @return No Content
+     */
+    updateTeamMember(teamMemberId: number, body: UpdateTeamMemberCommand): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/TeamMembers/{teamMemberId}";
+        if (teamMemberId === undefined || teamMemberId === null)
+            throw new globalThis.Error("The parameter 'teamMemberId' must be defined.");
+        url_ = url_.replace("{teamMemberId}", encodeURIComponent("" + teamMemberId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateTeamMember(_response);
+        });
+    }
+
+    protected processUpdateTeamMember(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * Delete a Team Member
+     * @return No Content
+     */
+    deleteTeamMember(businessId: number, teamMemberId: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Business/{businessId}/TeamMembers/{teamMemberId}";
+        if (businessId === undefined || businessId === null)
+            throw new globalThis.Error("The parameter 'businessId' must be defined.");
+        url_ = url_.replace("{businessId}", encodeURIComponent("" + businessId));
+        if (teamMemberId === undefined || teamMemberId === null)
+            throw new globalThis.Error("The parameter 'teamMemberId' must be defined.");
+        url_ = url_.replace("{teamMemberId}", encodeURIComponent("" + teamMemberId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteTeamMember(_response);
+        });
+    }
+
+    protected processDeleteTeamMember(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            return throwException("Bad Request", status, _responseText, _headers);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+}
+
 export class TodoItemsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -1144,6 +2440,130 @@ export interface IAccessTokenResponse {
     [key: string]: any;
 }
 
+export class BusinessDto implements IBusinessDto {
+    id?: number;
+    name?: string;
+    urlSlug?: string;
+    description?: string | undefined;
+    phoneNumber?: string;
+    address?: string;
+
+    [key: string]: any;
+
+    constructor(data?: IBusinessDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.urlSlug = _data["urlSlug"];
+            this.description = _data["description"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.address = _data["address"];
+        }
+    }
+
+    static fromJS(data: any): BusinessDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new BusinessDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["urlSlug"] = this.urlSlug;
+        data["description"] = this.description;
+        data["phoneNumber"] = this.phoneNumber;
+        data["address"] = this.address;
+        return data;
+    }
+}
+
+export interface IBusinessDto {
+    id?: number;
+    name?: string;
+    urlSlug?: string;
+    description?: string | undefined;
+    phoneNumber?: string;
+    address?: string;
+
+    [key: string]: any;
+}
+
+export class BusinessesVm implements IBusinessesVm {
+    businesses?: BusinessDto[];
+
+    [key: string]: any;
+
+    constructor(data?: IBusinessesVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["businesses"])) {
+                this.businesses = [] as any;
+                for (let item of _data["businesses"])
+                    this.businesses!.push(BusinessDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): BusinessesVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new BusinessesVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.businesses)) {
+            data["businesses"] = [];
+            for (let item of this.businesses)
+                data["businesses"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IBusinessesVm {
+    businesses?: BusinessDto[];
+
+    [key: string]: any;
+}
+
 export class ColourDto implements IColourDto {
     code?: string;
     name?: string;
@@ -1192,6 +2612,554 @@ export class ColourDto implements IColourDto {
 export interface IColourDto {
     code?: string;
     name?: string;
+
+    [key: string]: any;
+}
+
+export class CounterDto implements ICounterDto {
+    id?: number;
+    name?: string;
+    isActive?: boolean;
+    isServing?: boolean;
+    assignedServices?: ServiceDto[];
+
+    [key: string]: any;
+
+    constructor(data?: ICounterDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.isActive = _data["isActive"];
+            this.isServing = _data["isServing"];
+            if (Array.isArray(_data["assignedServices"])) {
+                this.assignedServices = [] as any;
+                for (let item of _data["assignedServices"])
+                    this.assignedServices!.push(ServiceDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CounterDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CounterDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["isActive"] = this.isActive;
+        data["isServing"] = this.isServing;
+        if (Array.isArray(this.assignedServices)) {
+            data["assignedServices"] = [];
+            for (let item of this.assignedServices)
+                data["assignedServices"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface ICounterDto {
+    id?: number;
+    name?: string;
+    isActive?: boolean;
+    isServing?: boolean;
+    assignedServices?: ServiceDto[];
+
+    [key: string]: any;
+}
+
+export class CountersVm implements ICountersVm {
+    counters?: CounterDto[];
+
+    [key: string]: any;
+
+    constructor(data?: ICountersVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["counters"])) {
+                this.counters = [] as any;
+                for (let item of _data["counters"])
+                    this.counters!.push(CounterDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CountersVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new CountersVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.counters)) {
+            data["counters"] = [];
+            for (let item of this.counters)
+                data["counters"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface ICountersVm {
+    counters?: CounterDto[];
+
+    [key: string]: any;
+}
+
+export class CreateBusinessCommand implements ICreateBusinessCommand {
+    name?: string;
+    description?: string | undefined;
+    phoneNumber?: string;
+    address?: string;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateBusinessCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.address = _data["address"];
+        }
+    }
+
+    static fromJS(data: any): CreateBusinessCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateBusinessCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["phoneNumber"] = this.phoneNumber;
+        data["address"] = this.address;
+        return data;
+    }
+}
+
+export interface ICreateBusinessCommand {
+    name?: string;
+    description?: string | undefined;
+    phoneNumber?: string;
+    address?: string;
+
+    [key: string]: any;
+}
+
+export class CreateCounterCommand implements ICreateCounterCommand {
+    businessId?: number;
+    name?: string;
+    isActive?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateCounterCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.name = _data["name"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): CreateCounterCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCounterCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["name"] = this.name;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface ICreateCounterCommand {
+    businessId?: number;
+    name?: string;
+    isActive?: boolean;
+
+    [key: string]: any;
+}
+
+export class CreateProviderCommand implements ICreateProviderCommand {
+    businessId?: number;
+    name?: string;
+    isActive?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateProviderCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.name = _data["name"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): CreateProviderCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateProviderCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["name"] = this.name;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface ICreateProviderCommand {
+    businessId?: number;
+    name?: string;
+    isActive?: boolean;
+
+    [key: string]: any;
+}
+
+export class CreateServiceCommand implements ICreateServiceCommand {
+    businessId?: number;
+    name?: string;
+    description?: string | undefined;
+    isActive?: boolean;
+    logoUrl?: string | undefined;
+    mode?: number;
+    averageServiceTimeMinutes?: number;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateServiceCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.isActive = _data["isActive"];
+            this.logoUrl = _data["logoUrl"];
+            this.mode = _data["mode"];
+            this.averageServiceTimeMinutes = _data["averageServiceTimeMinutes"];
+        }
+    }
+
+    static fromJS(data: any): CreateServiceCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["isActive"] = this.isActive;
+        data["logoUrl"] = this.logoUrl;
+        data["mode"] = this.mode;
+        data["averageServiceTimeMinutes"] = this.averageServiceTimeMinutes;
+        return data;
+    }
+}
+
+export interface ICreateServiceCommand {
+    businessId?: number;
+    name?: string;
+    description?: string | undefined;
+    isActive?: boolean;
+    logoUrl?: string | undefined;
+    mode?: number;
+    averageServiceTimeMinutes?: number;
+
+    [key: string]: any;
+}
+
+export class CreateServiceToCounterCommand implements ICreateServiceToCounterCommand {
+    businessId?: number;
+    serviceId?: number;
+    counterId?: number;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateServiceToCounterCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.serviceId = _data["serviceId"];
+            this.counterId = _data["counterId"];
+        }
+    }
+
+    static fromJS(data: any): CreateServiceToCounterCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceToCounterCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["serviceId"] = this.serviceId;
+        data["counterId"] = this.counterId;
+        return data;
+    }
+}
+
+export interface ICreateServiceToCounterCommand {
+    businessId?: number;
+    serviceId?: number;
+    counterId?: number;
+
+    [key: string]: any;
+}
+
+export class CreateServiceToProviderCommand implements ICreateServiceToProviderCommand {
+    businessId?: number;
+    serviceId?: number;
+    providerId?: number;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateServiceToProviderCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.serviceId = _data["serviceId"];
+            this.providerId = _data["providerId"];
+        }
+    }
+
+    static fromJS(data: any): CreateServiceToProviderCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateServiceToProviderCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["serviceId"] = this.serviceId;
+        data["providerId"] = this.providerId;
+        return data;
+    }
+}
+
+export interface ICreateServiceToProviderCommand {
+    businessId?: number;
+    serviceId?: number;
+    providerId?: number;
+
+    [key: string]: any;
+}
+
+export class CreateTeamMemberCommand implements ICreateTeamMemberCommand {
+    businessId?: number;
+    name?: string;
+    pinHash?: string;
+    email?: string;
+    role?: number;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateTeamMemberCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.name = _data["name"];
+            this.pinHash = _data["pinHash"];
+            this.email = _data["email"];
+            this.role = _data["role"];
+        }
+    }
+
+    static fromJS(data: any): CreateTeamMemberCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateTeamMemberCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["name"] = this.name;
+        data["pinHash"] = this.pinHash;
+        data["email"] = this.email;
+        data["role"] = this.role;
+        return data;
+    }
+}
+
+export interface ICreateTeamMemberCommand {
+    businessId?: number;
+    name?: string;
+    pinHash?: string;
+    email?: string;
+    role?: number;
 
     [key: string]: any;
 }
@@ -1648,6 +3616,130 @@ export interface ILookupDto {
     [key: string]: any;
 }
 
+export class ProviderDto implements IProviderDto {
+    id?: number;
+    name?: string;
+    isActive?: boolean;
+    services?: ServiceDto[];
+
+    [key: string]: any;
+
+    constructor(data?: IProviderDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.isActive = _data["isActive"];
+            if (Array.isArray(_data["services"])) {
+                this.services = [] as any;
+                for (let item of _data["services"])
+                    this.services!.push(ServiceDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ProviderDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProviderDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["isActive"] = this.isActive;
+        if (Array.isArray(this.services)) {
+            data["services"] = [];
+            for (let item of this.services)
+                data["services"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IProviderDto {
+    id?: number;
+    name?: string;
+    isActive?: boolean;
+    services?: ServiceDto[];
+
+    [key: string]: any;
+}
+
+export class ProvidersVm implements IProvidersVm {
+    providers?: ProviderDto[];
+
+    [key: string]: any;
+
+    constructor(data?: IProvidersVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["providers"])) {
+                this.providers = [] as any;
+                for (let item of _data["providers"])
+                    this.providers!.push(ProviderDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ProvidersVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProvidersVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.providers)) {
+            data["providers"] = [];
+            for (let item of this.providers)
+                data["providers"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IProvidersVm {
+    providers?: ProviderDto[];
+
+    [key: string]: any;
+}
+
 export class RefreshRequest implements IRefreshRequest {
     refreshToken!: string;
 
@@ -1848,6 +3940,254 @@ export interface IResetPasswordRequest {
     email: string;
     resetCode: string;
     newPassword: string;
+
+    [key: string]: any;
+}
+
+export class ServiceDto implements IServiceDto {
+    id?: number;
+    name?: string;
+    description?: string | undefined;
+    averageServiceTimeMinutes?: number;
+    isActive?: boolean;
+    logoUrl?: string | undefined;
+    mode?: number;
+
+    [key: string]: any;
+
+    constructor(data?: IServiceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.averageServiceTimeMinutes = _data["averageServiceTimeMinutes"];
+            this.isActive = _data["isActive"];
+            this.logoUrl = _data["logoUrl"];
+            this.mode = _data["mode"];
+        }
+    }
+
+    static fromJS(data: any): ServiceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["averageServiceTimeMinutes"] = this.averageServiceTimeMinutes;
+        data["isActive"] = this.isActive;
+        data["logoUrl"] = this.logoUrl;
+        data["mode"] = this.mode;
+        return data;
+    }
+}
+
+export interface IServiceDto {
+    id?: number;
+    name?: string;
+    description?: string | undefined;
+    averageServiceTimeMinutes?: number;
+    isActive?: boolean;
+    logoUrl?: string | undefined;
+    mode?: number;
+
+    [key: string]: any;
+}
+
+export class ServicesVm implements IServicesVm {
+    services?: ServiceDto[];
+
+    [key: string]: any;
+
+    constructor(data?: IServicesVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["services"])) {
+                this.services = [] as any;
+                for (let item of _data["services"])
+                    this.services!.push(ServiceDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ServicesVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServicesVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.services)) {
+            data["services"] = [];
+            for (let item of this.services)
+                data["services"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IServicesVm {
+    services?: ServiceDto[];
+
+    [key: string]: any;
+}
+
+export class TeamMemberDto implements ITeamMemberDto {
+    id?: number;
+    name?: string;
+    email?: string;
+    role?: number;
+    createdAtUtc?: Date;
+
+    [key: string]: any;
+
+    constructor(data?: ITeamMemberDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.email = _data["email"];
+            this.role = _data["role"];
+            this.createdAtUtc = _data["createdAtUtc"] ? new Date(_data["createdAtUtc"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): TeamMemberDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TeamMemberDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["email"] = this.email;
+        data["role"] = this.role;
+        data["createdAtUtc"] = this.createdAtUtc ? this.createdAtUtc.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface ITeamMemberDto {
+    id?: number;
+    name?: string;
+    email?: string;
+    role?: number;
+    createdAtUtc?: Date;
+
+    [key: string]: any;
+}
+
+export class TeamMembersVm implements ITeamMembersVm {
+    teamMembers?: TeamMemberDto[];
+
+    [key: string]: any;
+
+    constructor(data?: ITeamMembersVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["teamMembers"])) {
+                this.teamMembers = [] as any;
+                for (let item of _data["teamMembers"])
+                    this.teamMembers!.push(TeamMemberDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): TeamMembersVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new TeamMembersVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.teamMembers)) {
+            data["teamMembers"] = [];
+            for (let item of this.teamMembers)
+                data["teamMembers"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface ITeamMembersVm {
+    teamMembers?: TeamMemberDto[];
 
     [key: string]: any;
 }
@@ -2200,6 +4540,330 @@ export interface ITwoFactorResponse {
     recoveryCodes?: string[] | undefined;
     isTwoFactorEnabled: boolean;
     isMachineRemembered: boolean;
+
+    [key: string]: any;
+}
+
+export class UpdateBusinessCommand implements IUpdateBusinessCommand {
+    id?: number;
+    name?: string;
+    description?: string | undefined;
+    phoneNumber?: string;
+    address?: string;
+
+    [key: string]: any;
+
+    constructor(data?: IUpdateBusinessCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.address = _data["address"];
+        }
+    }
+
+    static fromJS(data: any): UpdateBusinessCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateBusinessCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["phoneNumber"] = this.phoneNumber;
+        data["address"] = this.address;
+        return data;
+    }
+}
+
+export interface IUpdateBusinessCommand {
+    id?: number;
+    name?: string;
+    description?: string | undefined;
+    phoneNumber?: string;
+    address?: string;
+
+    [key: string]: any;
+}
+
+export class UpdateCounterCommand implements IUpdateCounterCommand {
+    businessId?: number;
+    counterId?: number;
+    name?: string;
+    isActive?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IUpdateCounterCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.counterId = _data["counterId"];
+            this.name = _data["name"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCounterCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCounterCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["counterId"] = this.counterId;
+        data["name"] = this.name;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IUpdateCounterCommand {
+    businessId?: number;
+    counterId?: number;
+    name?: string;
+    isActive?: boolean;
+
+    [key: string]: any;
+}
+
+export class UpdateProviderCommand implements IUpdateProviderCommand {
+    businessId?: number;
+    providerId?: number;
+    name?: string;
+    isActive?: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: IUpdateProviderCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.providerId = _data["providerId"];
+            this.name = _data["name"];
+            this.isActive = _data["isActive"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProviderCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProviderCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["providerId"] = this.providerId;
+        data["name"] = this.name;
+        data["isActive"] = this.isActive;
+        return data;
+    }
+}
+
+export interface IUpdateProviderCommand {
+    businessId?: number;
+    providerId?: number;
+    name?: string;
+    isActive?: boolean;
+
+    [key: string]: any;
+}
+
+export class UpdateServiceCommand implements IUpdateServiceCommand {
+    businessId?: number;
+    serviceId?: number;
+    name?: string;
+    description?: string | undefined;
+    isActive?: boolean;
+    logoUrl?: string | undefined;
+    mode?: number;
+    averageServiceTimeMinutes?: number;
+
+    [key: string]: any;
+
+    constructor(data?: IUpdateServiceCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.serviceId = _data["serviceId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.isActive = _data["isActive"];
+            this.logoUrl = _data["logoUrl"];
+            this.mode = _data["mode"];
+            this.averageServiceTimeMinutes = _data["averageServiceTimeMinutes"];
+        }
+    }
+
+    static fromJS(data: any): UpdateServiceCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateServiceCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["serviceId"] = this.serviceId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["isActive"] = this.isActive;
+        data["logoUrl"] = this.logoUrl;
+        data["mode"] = this.mode;
+        data["averageServiceTimeMinutes"] = this.averageServiceTimeMinutes;
+        return data;
+    }
+}
+
+export interface IUpdateServiceCommand {
+    businessId?: number;
+    serviceId?: number;
+    name?: string;
+    description?: string | undefined;
+    isActive?: boolean;
+    logoUrl?: string | undefined;
+    mode?: number;
+    averageServiceTimeMinutes?: number;
+
+    [key: string]: any;
+}
+
+export class UpdateTeamMemberCommand implements IUpdateTeamMemberCommand {
+    businessId?: number;
+    teamMemberId?: number;
+    name?: string;
+    email?: string;
+    role?: number;
+
+    [key: string]: any;
+
+    constructor(data?: IUpdateTeamMemberCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.businessId = _data["businessId"];
+            this.teamMemberId = _data["teamMemberId"];
+            this.name = _data["name"];
+            this.email = _data["email"];
+            this.role = _data["role"];
+        }
+    }
+
+    static fromJS(data: any): UpdateTeamMemberCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateTeamMemberCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["businessId"] = this.businessId;
+        data["teamMemberId"] = this.teamMemberId;
+        data["name"] = this.name;
+        data["email"] = this.email;
+        data["role"] = this.role;
+        return data;
+    }
+}
+
+export interface IUpdateTeamMemberCommand {
+    businessId?: number;
+    teamMemberId?: number;
+    name?: string;
+    email?: string;
+    role?: number;
 
     [key: string]: any;
 }
